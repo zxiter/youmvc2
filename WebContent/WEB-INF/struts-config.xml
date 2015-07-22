@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<struts>
+    <formbeans>
+        <bean name="loginForm" class="com.youmvc.model.LoginForm"/>
+
+        <bean name="zhuceForm" class="com.youmvc.model.ZhuForm"/>
+
+        <bean name="someForm" class="com.youmvc.biz.SomeForm"/>
+
+        <bean name="updateForm" class="com.simple.UpdateForm"/>
+    </formbeans>
+    <action-mapping>
+        <action name="loginForm" type="com.youmvc.action.LoginAction" path="/login">
+            <forward name="chenggong" vaule="/success.jsp"></forward>
+            <forward name="shibai" vaule="/fail.jsp"></forward>
+        </action>
+
+        <action name="zhuceForm" type="com.youmvc.action.ZhuCeAction" path="/zhuce">
+            <forward name="chenggong" vaule="/success.jsp"></forward>
+            <forward name="shibai" vaule="/fail.jsp"></forward>
+        </action>
+
+        <action name="someForm" type="com.youmvc.biz.SomeAction" path="/some">
+            <forward name="chenggong" vaule="/success.jsp"></forward>
+            <forward name="shibai" vaule="/fail.jsp"></forward>
+        </action>
+
+        <action name="updateForm" type="com.simple.UpdateAction" path="/update">
+            <forward name="chenggong" vaule="/updatesucess.jsp"></forward>
+            <forward name="shibai" vaule="/fail.jsp"></forward>
+        </action>
+    </action-mapping>
+</struts>
