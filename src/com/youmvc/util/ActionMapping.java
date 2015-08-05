@@ -8,17 +8,23 @@ import java.util.Map;
  */
 public class ActionMapping {
 
-    public ActionMapping(){
+	public ActionMapping() {
 
-    }
+	}
 
-    public static Map<String,String> getMap(){
-        Map<String,String> map=new HashMap<>();
-        map.put("com.youmvc.model.LoginForm","com.youmvc.action.LoginAction");
-        map.put("com.youmvc.model.ZhuCeForm","com.youmvc.action.ZhuCeAction");
+	/**
+	 * 加载路径
+	 * 
+	 * @return
+	 */
+	public static Map<String, String> getMap() {
+		Map<String, String> map = new HashMap<>();
+		map.put("com.youmvc.model.LoginForm", "com.youmvc.action.LoginAction");
+		map.put("com.youmvc.model.ZhuCeForm", "com.youmvc.action.ZhuCeAction");
 
-        map.put("com.youmvc.biz.SomeForm","com.youmvc.biz.SomeAction");
+		map.put("com.youmvc.biz.SomeForm", "com.youmvc.biz.SomeAction");
 
-        return map;
-    }
+		return map;
+	}
+
 }
