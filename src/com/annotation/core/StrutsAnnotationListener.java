@@ -1,13 +1,10 @@
 package com.annotation.core;
 
-import java.util.Map;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
-import com.youmvc.model.XmlBean;
-import com.youmvc.util.StrutsXml;
 
 /**
  * @author liufeihua
@@ -20,17 +17,15 @@ public class StrutsAnnotationListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		ServletContext context = servletContextEvent.getServletContext();
-		String xmlPath = context.getInitParameter("struts-config");
-		String tomcatPath = context.getRealPath("\\");
+		String pagePath = context.getInitParameter("annotation-config");
 
-		String newPath = tomcatPath + xmlPath;
+		String path = StrutsAnnotationListener.class.getClassLoader()
+				.getResource("").getPath()
+				+ pagePath.replace(".", "\\");
+		List<AnnotationBean> list = ReadAnnotation.parseAnnotation(path);
+		context.setAttribute("struts_annotation", list);
 
-		// String newPath= path.replace("\\","\\\\");
-
-		Map<String, XmlBean> xmlBeanMap = StrutsXml.parseXml(newPath);
-		context.setAttribute("struts", xmlBeanMap);
-
-		System.out.println("信息:系统已经加载完成!!");
+		System.out.println("信息:系统annotation已经加载完成!!");
 	}
 
 	@Override

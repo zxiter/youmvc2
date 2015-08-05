@@ -1,7 +1,8 @@
 package com.annotation.core;
 
 import java.io.IOException;
-import java.util.Map;
+import java.lang.reflect.Method;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,20 +10,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.youmvc.model.Action;
 import com.youmvc.model.ActionForm;
-import com.youmvc.model.XmlBean;
 import com.youmvc.util.FullBean;
 
 /**
- * Description:TODO
+ * Description:总的控制器
  * 
  * @author liufeihua
- * @date 2015年8月3日下午9:28:43
+ * @date 2015年8月5日上午9:28:43
  * @version 1.0
  * 
  */
-@WebServlet(name = "annotationAction", urlPatterns = "annotationAction.do")
+@WebServlet(name = "annotationAction", urlPatterns = "*.a")
 public class AnnotationAction extends HttpServlet {
 
 	@Override
@@ -37,32 +36,36 @@ public class AnnotationAction extends HttpServlet {
 
 		System.out.println(getPath(req));
 
-		String path = this.getPath(req);
+		String path = this.getPath(req);// 获取访问的路径，路径要和访问的方法要一样，否则无法访问得到
 
-		Map<String, XmlBean> map = (Map<String, XmlBean>) this
-				.getServletContext().getAttribute("struts");
-		XmlBean xmlBean = map.get(path);
+		List<AnnotationBean> list = (List<AnnotationBean>) this
+				.getServletContext().getAttribute("struts_annotation");// 从context环境中获取启动时得到的注解集合
+		for (AnnotationBean a : list) {
+			List<String> annotationBeanPath = a.getPath();
+			if (annotationBeanPath.contains(path)) {// 判断是否有访问的路径（方法）
 
-		if (null == xmlBean) {
-			System.out.println("信息:没有这个方法!");
-		} else {
-			ActionForm actionForm = FullBean.full(req, xmlBean.getFormClass());
+				ActionForm actionForm = FullBean.full(req, a.getFormClass());// 得到实体，谁用谁转换
 
-			String actionType = xmlBean.getActionType();
-			Map<String, String> actionForward = xmlBean.getActionForward();
+				String actionType = a.getActionClass();// 访问控制器的类的全名称
 
-			Action action = null;
+				Class clazz = null;
+				try {
+					clazz = Class.forName(actionType);
+					Method method = clazz.getDeclaredMethod(path.substring(1),
+							new Class[] { HttpServletRequest.class,
+									ActionForm.class });
+					String url = (String) method.invoke(clazz.newInstance(),
+							new Object[] { req, actionForm });
 
-			try {
-				Class clazz = Class.forName(actionType);
-				action = (Action) clazz.newInstance();
-			} catch (Exception e) {
-				System.out.println("信息:加载控制器失败!");
-				e.printStackTrace();
+					req.getRequestDispatcher(url).forward(req, resp);
+				} catch (Exception e) {
+					System.out.println("信息:加载注解控制器失败!");
+					e.printStackTrace();
+				}
+				break;
+			} else {
+				System.out.println("信息:没有这个方法!");
 			}
-
-			String url = action.execute(req, actionForm, actionForward);
-			req.getRequestDispatcher(url).forward(req, resp);
 		}
 
 	}

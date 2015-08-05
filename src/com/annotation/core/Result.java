@@ -16,10 +16,10 @@ import java.lang.annotation.Target;
  * @version 1.0
  * 
  */
-@Target({ ElementType.TYPE, ElementType.METHOD })
-// 可以用于类和方法
+@Target(ElementType.METHOD)
+// 用于方法
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Result {
 
-	String value() default "success";
+	String value();
 }

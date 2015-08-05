@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 // 只能用于类
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Controller {
+public @interface Form {
 
-	String value() default "index";
+	String form();// 接收的实体
 }

@@ -4,11 +4,11 @@
 package com.annotation.core;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.youmvc.model.XmlBean;
+import org.junit.Test;
 
 /**
  * Description:解析包的注解
@@ -26,9 +26,47 @@ public class ReadAnnotation {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Map<String, XmlBean> parseAnnotation(String xmlPath) {
+	public static List<AnnotationBean> parseAnnotation(String pagePath) {
 
-		return null;
+		List<String> classNameList = getClassName(pagePath, null);
+
+		List<AnnotationBean> annotationBeans = new ArrayList<>();
+
+		AnnotationBean bean = null;
+
+		for (String className : classNameList) {
+			bean = new AnnotationBean();
+			bean.setActionClass(className);// 获取类的全类名
+
+			System.out.println("类名:" + className);
+			try {
+				Class<?> clazz = Class.forName(className);
+
+				if (clazz.isAnnotationPresent(Form.class)) {
+					Form form = clazz.getAnnotation(Form.class);
+					bean.setFormClass(form.form());// 获取实体的全类名
+					System.out.println("实体名:" + form.form());
+				}
+
+				Method[] methods = clazz.getDeclaredMethods();
+				List<String> pList = new ArrayList<>();
+				for (Method method : methods) {
+					if (method.isAnnotationPresent(Path.class)) {
+						Path path = method.getAnnotation(Path.class);
+						pList.add(path.value());
+						System.out.println("方法上的路径:" + path.value());
+					}
+
+				}
+
+				bean.setPath(pList);
+			} catch (ClassNotFoundException e) {
+				System.out.println("严重：加载类错误，没找到这个类!");
+				e.printStackTrace();
+			}
+			annotationBeans.add(bean);
+		}
+		return annotationBeans;
 	}
 
 	/**
@@ -39,7 +77,7 @@ public class ReadAnnotation {
 				+ pageName.replace(".", "\\");
 		List<String> fileNames = getClassName(filePath, null);
 
-		return fileNames;
+		return null;
 	}
 
 	/**
@@ -69,14 +107,26 @@ public class ReadAnnotation {
 		return myClassName;
 	}
 
-	// @Test
-	// public void testClassName() throws Exception {
-	//
-	// List<String> classNames = getClassName("com.annotation.demo.action");
-	//
-	// for (String classname : classNames) {
-	//
-	// System.out.println("类名:" + classname);
-	// }
-	// }
+	@Test
+	public void testClassName() throws Exception {
+
+		// List<String> classNames = getClassName("com.annotation.demo.action");
+
+		// Map<String, AnnotationBean> map =
+		// parseAnnotation("com.annotation.demo.action");
+		// // for (String classname : classNames) {
+		// //
+		// // System.out.println("类名:" + classname);
+		// // }
+		// Set keySet = map.keySet();
+		// for (Iterator it = keySet.iterator(); it.hasNext();) {
+		//
+		// String key = (String) it.next();
+		// System.out.println("=====");
+		// System.out.println(key);
+		// System.out.println("=====");
+		// System.out.println(map.get(key));
+		// }
+		parseAnnotation("com.annotation.demo.action");
+	}
 }

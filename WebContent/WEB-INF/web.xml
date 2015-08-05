@@ -11,4 +11,12 @@
     <listener>
         <listener-class>com.youmvc.listener.StrutsXmlListener</listener-class>
     </listener>
+    
+    <context-param>
+        <param-name>annotation-config</param-name>
+        <param-value>com.annotation.demo.action</param-value>
+    </context-param>
+    <listener>
+        <listener-class>com.annotation.core.StrutsAnnotationListener</listener-class>
+    </listener>
 </web-app>
