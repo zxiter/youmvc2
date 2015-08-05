@@ -1,4 +1,4 @@
-package com.youmvc.listener;
+package com.annotation.core;
 
 import java.util.Map;
 
@@ -11,11 +11,11 @@ import com.youmvc.util.StrutsXml;
 
 /**
  * @author liufeihua
- * @date 2015年7月21日
+ * @date 2015年8月3日下午9:28:43
  * @version 1.0
  * 
  */
-public class StrutsXmlListener implements ServletContextListener {
+public class StrutsAnnotationListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
